@@ -14,8 +14,21 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.1
-
+  catbreed_repository:
+    path: packages/catbreed_repository
+  catbreed_api_client:
+    path: packages/catbreed_api_client
+  flutter_web_plugins:
+    sdk: flutter
   flutter_gen: any
+  equatable: ^2.0.5
+  go_router: ^14.2.3
+  bloc_concurrency: ^0.2.5
+  hydrated_bloc: ^9.1.5
+  json_annotation: ^4.9.0
+  logger: ^2.4.0
+  logging: ^1.2.0
+
 dev_dependencies:
   bloc_test: ^9.1.6
   flutter_test:

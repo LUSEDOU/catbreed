@@ -35,7 +35,7 @@ class CatbreedRepository {
 
   /// Fetch a breed by id
   /// Returns null if the breed is not found
-  Future<Breed?> getBreed(int id) async {
+  Future<Breed?> getBreed(String id) async {
     try {
       final breed = await _client.fetchBreed(id);
       if (breed == null) return null;

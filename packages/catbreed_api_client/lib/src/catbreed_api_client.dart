@@ -86,7 +86,7 @@ class CatbreedApiClient {
 
   /// Fetches a breed by id.
   /// * [id] - The id of the breed to fetch.
-  Future<BreedSummary?> fetchBreed(int id) async {
+  Future<BreedSummary?> fetchBreed(String id) async {
     try {
       final response = await _dio.get<String>('breeds/$id');
 
