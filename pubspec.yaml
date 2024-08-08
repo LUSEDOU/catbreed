@@ -28,6 +28,7 @@ dependencies:
   json_annotation: ^4.9.0
   logger: ^2.4.0
   logging: ^1.2.0
+  very_good_infinite_list: ^0.7.1
 
 dev_dependencies:
   bloc_test: ^9.1.6

@@ -1,5 +1,5 @@
+import 'package:catbreeds/breed/breed.dart';
 import 'package:catbreeds/breeds/breeds.dart';
-import 'package:catbreeds/catbreed/catbreed.dart';
 import 'package:go_router/go_router.dart';
 
 GoRouter appRouter = GoRouter(
@@ -11,7 +11,7 @@ GoRouter appRouter = GoRouter(
       routes: [
         GoRoute(
           path: ':breedId',
-          builder: CatbreedPage.routeBuilder,
+          builder: BreedPage.routeBuilder,
         ),
       ],
     ),
