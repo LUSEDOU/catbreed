@@ -6,6 +6,7 @@ import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/material.dart' as material show Image;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 class BreedsView extends StatelessWidget {
   const BreedsView({super.key});
@@ -27,42 +28,100 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.select((BreedsBloc bloc) => bloc.state);
-    final child = switch (state.status) {
-      BreedsStatus.initial ||
-      BreedsStatus.loading =>
-        const Center(child: CircularProgressIndicator()),
-      BreedsStatus.loaded => const BreedsContent(),
-      BreedsStatus.error => const Center(child: Text('Failed to fetch breeds')),
-    };
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: child,
+    if (state.status == BreedsStatus.error) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Failed to fetch breeds'),
+            TextButton(
+              onPressed: () =>
+                  context.read<BreedsBloc>().add(const BreedsFetchRequested()),
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+            child: BreedSearchBar(),
+          ),
+          Expanded(
+            child: BreedsContent(),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class BreedsContent extends StatelessWidget {
+class BreedsContent extends StatefulWidget {
   const BreedsContent({super.key});
 
   @override
+  State<BreedsContent> createState() => _BreedsContentState();
+}
+
+class _BreedsContentState extends State<BreedsContent> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final breeds = context.select((BreedsBloc bloc) => bloc.state.breeds);
-    return Column(
-      children: [
-        Expanded(
-          child: SizedBox(
-            width: 300,
-            child: ListView.builder(
-              itemCount: breeds.length,
-              itemBuilder: (context, index) {
-                final breed = breeds[index];
-                return BreedTile(breed: breed);
-              },
-            ),
-          ),
-        ),
-      ],
+    final state = context.select((BreedsBloc bloc) => bloc.state);
+    final breeds = state.breeds;
+    final status = state.status;
+
+    // return Text('Some');
+    return BlocListener<BreedsBloc, BreedsState>(
+      listener: (context, state) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      },
+      child: InfiniteList(
+        scrollController: _scrollController,
+        itemCount: breeds.length + 1,
+        hasError: status == BreedsStatus.error,
+        hasReachedMax: state.fetchStatus == BreedsFetchStatus.endOfFeed,
+        onFetchData: () =>
+            context.read<BreedsBloc>().add(const BreedsFetchRequested()),
+        itemBuilder: (context, index) {
+          final breed = breeds.elementAtOrNull(index);
+          if (breed == null) {
+            if (state.fetchStatus == BreedsFetchStatus.endOfFeed) {
+              return const SizedBox.shrink();
+            }
+            return const Center(
+              child: SizedBox.square(
+                dimension: 50,
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          return BreedTile(breed: breed);
+        },
+      ),
     );
   }
 }
@@ -81,6 +140,7 @@ class BreedTile extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Card(
+      margin: const EdgeInsets.only(bottom: AppSpacing.lg),
       child: GestureDetector(
         onTap: () => context.go(
           '/breeds/${breed.id}',
@@ -112,22 +172,7 @@ class BreedTile extends StatelessWidget {
                 aspectRatio: 1,
                 // SizedBox(
                 // dimension: MediaQuery.of(context).size.width,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(AppSpacing.md),
-                  child: material.Image(
-                    image: NetworkImage(breed.image.url),
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.error),
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return const CircularProgressIndicator();
-                      }
-                    },
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                child: BreedImage(image: breed.image),
               ),
               const SizedBox(height: AppSpacing.md),
               Row(

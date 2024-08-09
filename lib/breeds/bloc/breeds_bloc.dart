@@ -34,7 +34,7 @@ class BreedsBloc extends Bloc<BreedsEvent, BreedsState> {
       emit(state.copyWith(status: BreedsStatus.loading));
 
       final breeds = await _repository.fetch(
-        page: state.page + 1,
+        page: state.page,
       );
 
       if (breeds.isEmpty) {
@@ -46,6 +46,7 @@ class BreedsBloc extends Bloc<BreedsEvent, BreedsState> {
         state.copyWith(
           breeds: [...state.breeds, ...breeds],
           status: BreedsStatus.loaded,
+          page: state.page + 1,
         ),
       );
     } catch (exception, stackTrace) {

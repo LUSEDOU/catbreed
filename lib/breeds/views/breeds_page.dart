@@ -24,12 +24,13 @@ class BreedsPage extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         final repository = context.read<CatbreedRepository>();
-        return BreedsBloc(repository: repository)
-          ..add(
-            (query?.isEmpty ?? true)
-                ? const BreedsFetchRequested()
-                : BreedsSearchRequested(query!),
-          );
+        final $ = BreedsBloc(repository: repository);
+
+        if (query?.isNotEmpty ?? false) {
+          $.add(BreedsSearchRequested(query!));
+        }
+
+        return $;
       },
       child: const BreedsView(),
     );

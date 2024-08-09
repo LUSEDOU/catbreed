@@ -59,69 +59,69 @@ class BreedContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final breed = context.select((BreedBloc bloc) => bloc.state.breed!);
     return Center(
-      child: SizedBox(
-        width: 300,
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AspectRatio(
-                  aspectRatio: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AspectRatio(
+                aspectRatio: 1,
+                child: Visibility(
+                  visible: breed.image?.url != null,
                   child: Image.network(
-                    breed.image.url,
+                    breed.image!.url,
                     fit: BoxFit.cover,
                   ),
                 ),
-                InfoTile(
-                  title: 'Origin',
-                  value: breed.origin,
-                ),
-                InfoTile(
-                  title: 'Temperament',
-                  value: breed.temperament,
-                ),
-                InfoTile(
-                  title: 'Life Span',
-                  value: breed.lifeSpan,
-                ),
-                InfoTile(
-                  title: 'Adaptability',
-                  value: breed.adaptability.toString(),
-                ),
-                InfoTile(
-                  title: 'Affection Level',
-                  value: breed.affectionLevel.toString(),
-                ),
-                InfoTile(
-                  title: 'Child Friendly',
-                  value: breed.childFriendly.toString(),
-                ),
-                InfoTile(
-                  title: 'Grooming',
-                  value: breed.grooming.toString(),
-                ),
-                InfoTile(
-                  title: 'Intelligence',
-                  value: breed.intelligence.toString(),
-                ),
-                InfoTile(
-                  title: 'Health Issues',
-                  value: breed.healthIssues.toString(),
-                ),
-                InfoTile(
-                  title: 'Social Needs',
-                  value: breed.socialNeeds.toString(),
-                ),
-                InfoTile(
-                  title: 'Stranger Friendly',
-                  value: breed.strangerFriendly.toString(),
-                ),
-              ],
-            ),
+              ),
+              InfoTile(
+                title: 'Origin',
+                value: breed.origin,
+              ),
+              InfoTile(
+                title: 'Temperament',
+                value: breed.temperament,
+              ),
+              InfoTile(
+                title: 'Life Span',
+                value: breed.lifeSpan,
+              ),
+              InfoTile(
+                title: 'Adaptability',
+                value: breed.adaptability.toString(),
+              ),
+              InfoTile(
+                title: 'Affection Level',
+                value: breed.affectionLevel.toString(),
+              ),
+              InfoTile(
+                title: 'Child Friendly',
+                value: breed.childFriendly.toString(),
+              ),
+              InfoTile(
+                title: 'Grooming',
+                value: breed.grooming.toString(),
+              ),
+              InfoTile(
+                title: 'Intelligence',
+                value: breed.intelligence.toString(),
+              ),
+              InfoTile(
+                title: 'Health Issues',
+                value: breed.healthIssues.toString(),
+              ),
+              InfoTile(
+                title: 'Social Needs',
+                value: breed.socialNeeds.toString(),
+              ),
+              InfoTile(
+                title: 'Stranger Friendly',
+                value: breed.strangerFriendly.toString(),
+              ),
+            ],
           ),
         ),
       ),

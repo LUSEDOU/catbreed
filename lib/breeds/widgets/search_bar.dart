@@ -1,15 +1,16 @@
+import 'package:catbreeds/app_ui/app_ui.dart';
 import 'package:catbreeds/breeds/breeds.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SearchBar extends StatefulWidget {
-  const SearchBar({super.key});
+class BreedSearchBar extends StatefulWidget {
+  const BreedSearchBar({super.key});
 
   @override
-  State<SearchBar> createState() => _SearchBarState();
+  State<BreedSearchBar> createState() => _BreedSearchBarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _BreedSearchBarState extends State<BreedSearchBar> {
   late final TextEditingController _controller;
   late final GlobalKey<FormState> _formKey;
 
@@ -25,12 +26,29 @@ class _SearchBarState extends State<SearchBar> {
     return Form(
       key: _formKey,
       child: TextFormField(
+        textInputAction: TextInputAction.search,
         controller: _controller,
         decoration: InputDecoration(
           labelText: 'Search',
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () => _formKey.currentState?.save(),
+          suffixIcon: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () => _formKey.currentState?.save(),
+              ),
+              // const SizedBox(width: AppSpacing.md),
+              IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  _controller.clear();
+                  context.read<BreedsBloc>().add(const BreedsClearRequested());
+                },
+              ),
+            ],
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
           ),
         ),
         onSaved: (value) {
