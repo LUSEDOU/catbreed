@@ -21,6 +21,9 @@ void main() {
     test('can be (de)serialiced', () {
       final breed = Breed.fromJson(breeds.first);
       expect(breed.toJson(), breeds.first);
+      for (final breed in breeds) {
+        expect(Breed.fromJson(breed).toJson(), breed);
+      }
     });
   });
 }

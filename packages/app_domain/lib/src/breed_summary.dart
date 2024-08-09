@@ -20,7 +20,8 @@ class BreedSummary extends Equatable {
   });
 
   /// Converts a [Map<String, dynamic>] to a [BreedSummary].
-  factory BreedSummary.fromJson(Map<String, dynamic> json) => _$BreedSummaryFromJson(json);
+  factory BreedSummary.fromJson(Map<String, dynamic> json) =>
+      _$BreedSummaryFromJson(json);
 
   /// The unique identifier for this breed.
   final int id;

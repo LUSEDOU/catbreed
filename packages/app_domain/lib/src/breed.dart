@@ -22,7 +22,6 @@ class Breed extends Equatable {
     required this.description,
     required this.lifeSpan,
     required this.indoor,
-    required this.altNames,
     required this.adaptability,
     required this.affectionLevel,
     required this.childFriendly,
@@ -42,12 +41,14 @@ class Breed extends Equatable {
     required this.rex,
     required this.suppressedTail,
     required this.shortLegs,
-    required this.wikipediaUrl,
     required this.hypoallergenic,
-    required this.referenceImageId,
-    required this.image,
+    this.referenceImageId,
+    this.wikipediaUrl,
+    this.catFriendly,
+    this.altNames,
+    this.image,
     this.lap,
-    this.bidavility,
+    this.bidability,
     this.vcahospitalsUrl,
     this.cfaUrl,
     this.vetstreetUrl,
@@ -108,7 +109,7 @@ class Breed extends Equatable {
 
   /// The alternative names of this breed.
   @JsonKey(name: 'alt_names')
-  final String altNames;
+  final String? altNames;
 
   /// The adaptability of this breed.
   final int adaptability;
@@ -124,6 +125,10 @@ class Breed extends Equatable {
   /// The dog friendly of this breed.
   @JsonKey(name: 'dog_friendly')
   final int dogFriendly;
+
+  /// The cat friendly of this breed.
+  @JsonKey(name: 'cat_friendly')
+  final int? catFriendly;
 
   /// The energy level of this breed.
   @JsonKey(name: 'energy_level')
@@ -155,7 +160,7 @@ class Breed extends Equatable {
   final int vocalisation;
 
   /// The bida of this breed.
-  final int? bidavility;
+  final int? bidability;
 
   /// The experimental of this breed.
   @intBoolean
@@ -188,7 +193,7 @@ class Breed extends Equatable {
 
   /// Wikipedia URL for this breed.
   @JsonKey(name: 'wikipedia_url')
-  final String wikipediaUrl;
+  final String? wikipediaUrl;
 
   /// Whether this breed is hypoallergenic.
   @intBoolean
@@ -196,10 +201,10 @@ class Breed extends Equatable {
 
   /// The reference image ID for this breed.
   @JsonKey(name: 'reference_image_id')
-  final String referenceImageId;
+  final String? referenceImageId;
 
   /// The image for this breed.
-  final Image image;
+  final Image? image;
 
   /// Converts this [Breed] to a [Map<String, dynamic>].
   Map<String, dynamic> toJson() => _$BreedToJson(this);
@@ -227,7 +232,7 @@ class Breed extends Equatable {
         dogFriendly,
         energyLevel,
         grooming,
-        bidavility,
+        bidability,
         healthIssues,
         intelligence,
         sheddingLevel,
@@ -245,5 +250,6 @@ class Breed extends Equatable {
         hypoallergenic,
         referenceImageId,
         image,
+        catFriendly,
       ];
 }

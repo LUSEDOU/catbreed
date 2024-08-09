@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:app_domain/app_domain.dart';
 import 'package:dio/dio.dart';
@@ -68,13 +69,18 @@ class CatbreedApiClient {
         },
       );
 
+      print(response.requestOptions.data);
+
       final data = response.data;
       if (data == null) throw const ApiClientException('Response is null');
 
       final breeds =
           (jsonDecode(data) as List<dynamic>).cast<Map<String, dynamic>>();
 
-      return breeds.map(Breed.fromJson).toList();
+      return breeds.map((e) {
+        print(e);
+        return Breed.fromJson(e);
+      }).toList();
     } on DioException catch (error) {
       throw ApiClientException(
         'GET /breeds returned status ${error.response?.statusCode} with the following error: ${error.response?.data}',

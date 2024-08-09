@@ -50,20 +50,6 @@ class BreedsContent extends StatelessWidget {
     final breeds = context.select((BreedsBloc bloc) => bloc.state.breeds);
     return Column(
       children: [
-        TextField(
-          decoration: InputDecoration(
-            labelText: 'Search',
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                // context.read<BreedsBloc>().add(const BreedsSearchCleared());
-              },
-            ),
-          ),
-          // onChanged: (value) {
-          //   context.read<BreedsBloc>().add(BreedsSearchChanged(search: value));
-          // },
-        ),
         Expanded(
           child: SizedBox(
             width: 300,

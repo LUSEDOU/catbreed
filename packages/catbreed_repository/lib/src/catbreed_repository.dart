@@ -60,6 +60,11 @@ class CatbreedException implements Exception {
 
   /// Error thrown by the CatBreeds Repository
   final Object error;
+
+  @override
+  String toString() {
+    return 'CatbreedException: $error';
+  }
 }
 
 /// {@template search_failure}

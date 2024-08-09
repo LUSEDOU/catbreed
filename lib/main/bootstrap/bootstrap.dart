@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:catbreeds/main/bootstrap/app_bloc_observer.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:logging/logging.dart';
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {

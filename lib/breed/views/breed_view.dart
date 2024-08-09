@@ -58,8 +58,6 @@ class BreedContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final breed = context.select((BreedBloc bloc) => bloc.state.breed!);
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
     return Center(
       child: SizedBox(
         width: 300,
