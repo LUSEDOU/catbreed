@@ -1,5 +1,7 @@
+import 'package:catbreed_repository/catbreed_repository.dart';
 import 'package:catbreeds/app_ui/app_spacing/app_spacing.dart';
 import 'package:catbreeds/breed/breed.dart';
+import 'package:catbreeds/breeds/breeds.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,20 +9,6 @@ import 'package:logging/logging.dart';
 
 class BreedView extends StatelessWidget {
   const BreedView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Breed'),
-      ),
-      body: const _Body(),
-    );
-  }
-}
-
-class _Body extends StatelessWidget {
-  const _Body();
 
   @override
   Widget build(BuildContext context) {
@@ -39,90 +27,102 @@ class _Body extends StatelessWidget {
       },
       builder: (context, state) {
         Logger('BreedPage').info('state: ${state.status}');
-        switch (state.status) {
-          case BreedStatus.loading || BreedStatus.unknown:
-            return const Center(child: CircularProgressIndicator());
-          case BreedStatus.loaded:
-            return const BreedContent();
-          case BreedStatus.error:
-            return const Center(child: Text('Error'));
+        if (state.status == BreedStatus.unknown) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
+
+        return _Body(breed: state.breed!);
       },
     );
   }
 }
 
-class BreedContent extends StatelessWidget {
-  const BreedContent({super.key});
+class _Body extends StatelessWidget {
+  const _Body({required this.breed});
+
+  final Breed breed;
 
   @override
   Widget build(BuildContext context) {
-    final breed = context.select((BreedBloc bloc) => bloc.state.breed!);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(breed.name),
+      ),
+      body: BreedContent(breed: breed),
+    );
+  }
+}
+
+class BreedContent extends StatelessWidget {
+  const BreedContent({required this.breed, super.key});
+
+  final Breed breed;
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AspectRatio(
-                aspectRatio: 1,
-                child: Visibility(
-                  visible: breed.image?.url != null,
-                  child: Image.network(
-                    breed.image!.url,
-                    fit: BoxFit.cover,
-                  ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AspectRatio(
+              aspectRatio: 1,
+              child: BreedImage(image: breed.image),
+            ),
+            const SizedBox(height: AppSpacing.xxlg),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Builder(
+                  builder: (context) {
+                    final json = breed.toJson();
+
+                    final infoKeys = json.keys.where(
+                      (key) {
+                        final value = json[key];
+                        if (value == null) {
+                          return false;
+                        }
+
+                        if (key.contains('url')) {
+                          return false;
+                        }
+
+                        if (value is int ||
+                            (value is String && value.isNotEmpty) ||
+                            value is double ||
+                            value is bool) {
+                          return true;
+                        }
+
+                        return false;
+                      },
+                    ).toList();
+
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: infoKeys
+                          .map(
+                            (key) => InfoTile(
+                              title: key,
+                              value: json[key].toString(),
+                            ),
+                          )
+                          .toList(),
+                    );
+                  },
                 ),
               ),
-              InfoTile(
-                title: 'Origin',
-                value: breed.origin,
-              ),
-              InfoTile(
-                title: 'Temperament',
-                value: breed.temperament,
-              ),
-              InfoTile(
-                title: 'Life Span',
-                value: breed.lifeSpan,
-              ),
-              InfoTile(
-                title: 'Adaptability',
-                value: breed.adaptability.toString(),
-              ),
-              InfoTile(
-                title: 'Affection Level',
-                value: breed.affectionLevel.toString(),
-              ),
-              InfoTile(
-                title: 'Child Friendly',
-                value: breed.childFriendly.toString(),
-              ),
-              InfoTile(
-                title: 'Grooming',
-                value: breed.grooming.toString(),
-              ),
-              InfoTile(
-                title: 'Intelligence',
-                value: breed.intelligence.toString(),
-              ),
-              InfoTile(
-                title: 'Health Issues',
-                value: breed.healthIssues.toString(),
-              ),
-              InfoTile(
-                title: 'Social Needs',
-                value: breed.socialNeeds.toString(),
-              ),
-              InfoTile(
-                title: 'Stranger Friendly',
-                value: breed.strangerFriendly.toString(),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -144,18 +144,55 @@ class InfoTile extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
-    return RichText(
-      text: TextSpan(
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
+      width: double.infinity,
+      padding: const EdgeInsets.only(right: AppSpacing.md),
+      decoration: ShapeDecoration(
+        color: theme.colorScheme.surface,
+        shape: StadiumBorder(
+          side: BorderSide(
+            color: theme.colorScheme.primary,
+            width: AppSpacing.xs,
+          ),
+        ),
+      ),
+      child: Row(
         children: [
-          TextSpan(
-            text: '$title: ',
-            style: textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
+          Container(
+            // width: double.infinity,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.xs,
+            ),
+            decoration: ShapeDecoration(
+              color: theme.colorScheme.primary,
+              shape: StadiumBorder(
+                side: BorderSide(
+                  color: theme.colorScheme.primary,
+                  width: AppSpacing.xs,
+                ),
+              ),
+            ),
+            child: Text(
+              title,
+              style: textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onPrimary,
+              ),
             ),
           ),
-          TextSpan(
-            text: value,
-            style: textTheme.titleLarge,
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Text(
+                value,
+                style: textTheme.titleSmall,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
+              ),
+            ),
           ),
         ],
       ),

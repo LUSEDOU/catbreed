@@ -30,3 +30,7 @@ class BreedState extends Equatable {
   @override
   List<Object?> get props => [status, breed];
 }
+
+extension Info on Breed {
+
+  }

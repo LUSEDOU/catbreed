@@ -15,22 +15,25 @@ class BreedImage extends StatelessWidget {
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppSpacing.md),
-      child: Image(
-        image: NetworkImage(image!.url),
-        errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) {
-            return child;
-          } else {
-            return const Center(
-              child: SizedBox.square(
-                dimension: 100,
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-        },
-        fit: BoxFit.cover,
+      child: Hero(
+        tag: image!.id,
+        child: Image(
+          image: NetworkImage(image!.url),
+          errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            } else {
+              return const Center(
+                child: SizedBox.square(
+                  dimension: 100,
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+          },
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
