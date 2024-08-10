@@ -5,20 +5,20 @@ import 'package:flutter/material.dart';
 class BreedImage extends StatelessWidget {
   const BreedImage({required this.image, super.key});
 
-  final model.Image? image;
+  final model.Image image;
 
   @override
   Widget build(BuildContext context) {
-    if (image == null) {
+    if (image.isEmpty) {
       return const Icon(Icons.wifi_off);
     }
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppSpacing.md),
       child: Hero(
-        tag: image!.id,
+        tag: image.id,
         child: Image(
-          image: NetworkImage(image!.url),
+          image: NetworkImage(image.url),
           errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) {

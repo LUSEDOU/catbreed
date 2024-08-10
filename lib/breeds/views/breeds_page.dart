@@ -32,7 +32,7 @@ class BreedsPage extends StatelessWidget {
 
         return $;
       },
-      child: const BreedsView(),
+      child: BreedsView(query: query),
     );
   }
 }

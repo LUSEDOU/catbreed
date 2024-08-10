@@ -17,6 +17,7 @@ class CatbreedApiClient {
       _dio.options.baseUrl = baseUrl;
     }
     _dio.options.headers['x-api-key'] = apiKey;
+    _dio.interceptors.add(LogInterceptor());
   }
 
   final Dio _dio;
@@ -73,6 +74,22 @@ class CatbreedApiClient {
 
       final breeds =
           (jsonDecode(data) as List<dynamic>).cast<Map<String, dynamic>>();
+
+      for (final breed in breeds) {
+        if (breed['image'] == null) {
+          final id = breed['reference_image_id'] as String?;
+          if (id == null) continue;
+
+          final iresponse = await _dio.get<String>('images/$id');
+
+          final idata = iresponse.data;
+          if (idata == null) throw const ApiClientException('Response is null');
+
+          final image = jsonDecode(idata) as Map<String, dynamic>;
+
+          breed['image'] = image;
+        }
+      }
 
       return breeds.map(Breed.fromJson).toList();
     } on DioException catch (error) {

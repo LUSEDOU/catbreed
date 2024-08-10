@@ -6,7 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 class BreedsView extends StatelessWidget {
-  const BreedsView({super.key});
+  const BreedsView({super.key, this.query});
+
+  final String? query;
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +16,15 @@ class BreedsView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Breeds'),
       ),
-      body: const _Body(),
+      body: _Body(query: query),
     );
   }
 }
 
 class _Body extends StatelessWidget {
-  const _Body();
+  const _Body({this.query});
+
+  final String? query;
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +46,15 @@ class _Body extends StatelessWidget {
       );
     }
 
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
-            child: BreedSearchBar(),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+            child: BreedSearchBar(initialQuery: query),
           ),
-          Expanded(
+          const Expanded(
             child: BreedsContent(),
           ),
         ],

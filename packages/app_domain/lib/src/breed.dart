@@ -46,7 +46,7 @@ class Breed extends Equatable {
     this.wikipediaUrl,
     this.catFriendly,
     this.altNames,
-    this.image,
+    this.image = Image.empty,
     this.lap,
     this.bidability,
     this.vcahospitalsUrl,
@@ -204,7 +204,7 @@ class Breed extends Equatable {
   final String? referenceImageId;
 
   /// The image for this breed.
-  final Image? image;
+  final Image image;
 
   /// Converts this [Breed] to a [Map<String, dynamic>].
   Map<String, dynamic> toJson() => _$BreedToJson(this);

@@ -34,6 +34,19 @@ class Image extends Equatable {
   /// Converts this [Image] to a [Map<String, dynamic>].
   Map<String, dynamic> toJson() => _$ImageToJson(this);
 
+  /// An empty image.
+  static const empty = Image(
+    id: '',
+    width: 0,
+    height: 0,
+    url: '',
+  );
+
+  /// Whether this image is empty.
+  bool get isEmpty => this == Image.empty;
+
+
+
   @override
   List<Object> get props => [
         id,

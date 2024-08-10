@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BreedSearchBar extends StatefulWidget {
-  const BreedSearchBar({super.key});
+  const BreedSearchBar({super.key, this.initialQuery});
+
+  final String? initialQuery;
 
   @override
   State<BreedSearchBar> createState() => _BreedSearchBarState();
@@ -16,7 +18,7 @@ class _BreedSearchBarState extends State<BreedSearchBar> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController();
+    _controller = TextEditingController(text: widget.initialQuery);
     _formKey = GlobalKey<FormState>();
   }
 

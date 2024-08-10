@@ -44,7 +44,7 @@ Breed _$BreedFromJson(Map<String, dynamic> json) => Breed(
       catFriendly: (json['cat_friendly'] as num?)?.toInt(),
       altNames: json['alt_names'] as String?,
       image: json['image'] == null
-          ? null
+          ? Image.empty
           : Image.fromJson(json['image'] as Map<String, dynamic>),
       lap: _$JsonConverterFromJson<int, bool>(json['lap'], intBoolean.fromJson),
       bidability: (json['bidability'] as num?)?.toInt(),
@@ -77,9 +77,7 @@ Map<String, dynamic> _$BreedToJson(Breed instance) {
   val['life_span'] = instance.lifeSpan;
   val['indoor'] = intBoolean.toJson(instance.indoor);
   writeNotNull(
-    'lap',
-    _$JsonConverterToJson<int, bool>(instance.lap, intBoolean.toJson),
-  );
+      'lap', _$JsonConverterToJson<int, bool>(instance.lap, intBoolean.toJson));
   writeNotNull('alt_names', instance.altNames);
   val['adaptability'] = instance.adaptability;
   val['affection_level'] = instance.affectionLevel;
@@ -105,7 +103,7 @@ Map<String, dynamic> _$BreedToJson(Breed instance) {
   writeNotNull('wikipedia_url', instance.wikipediaUrl);
   val['hypoallergenic'] = intBoolean.toJson(instance.hypoallergenic);
   writeNotNull('reference_image_id', instance.referenceImageId);
-  writeNotNull('image', instance.image?.toJson());
+  val['image'] = instance.image.toJson();
   return val;
 }
 

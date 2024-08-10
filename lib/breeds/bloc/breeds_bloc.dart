@@ -38,7 +38,12 @@ class BreedsBloc extends Bloc<BreedsEvent, BreedsState> {
       );
 
       if (breeds.isEmpty) {
-        emit(state.copyWith(fetchStatus: BreedsFetchStatus.endOfFeed));
+        emit(
+          state.copyWith(
+            fetchStatus: BreedsFetchStatus.endOfFeed,
+            status: BreedsStatus.loaded,
+          ),
+        );
         return;
       }
 
