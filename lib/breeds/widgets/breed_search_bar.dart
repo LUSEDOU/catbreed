@@ -1,4 +1,3 @@
-import 'package:catbreeds/app_ui/app_ui.dart';
 import 'package:catbreeds/breeds/breeds.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

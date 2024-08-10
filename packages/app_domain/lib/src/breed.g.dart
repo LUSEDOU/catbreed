@@ -77,7 +77,9 @@ Map<String, dynamic> _$BreedToJson(Breed instance) {
   val['life_span'] = instance.lifeSpan;
   val['indoor'] = intBoolean.toJson(instance.indoor);
   writeNotNull(
-      'lap', _$JsonConverterToJson<int, bool>(instance.lap, intBoolean.toJson));
+    'lap',
+    _$JsonConverterToJson<int, bool>(instance.lap, intBoolean.toJson),
+  );
   writeNotNull('alt_names', instance.altNames);
   val['adaptability'] = instance.adaptability;
   val['affection_level'] = instance.affectionLevel;

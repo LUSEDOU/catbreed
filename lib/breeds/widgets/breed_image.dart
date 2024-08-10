@@ -10,7 +10,7 @@ class BreedImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (image == null) {
-      return const Icon(Icons.error);
+      return const Icon(Icons.wifi_off);
     }
 
     return ClipRRect(

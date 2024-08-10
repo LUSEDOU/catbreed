@@ -1,11 +1,8 @@
-import 'package:catbreed_repository/catbreed_repository.dart';
 import 'package:catbreeds/app_ui/app_ui.dart';
-import 'package:catbreeds/breed/breed.dart';
 import 'package:catbreeds/breeds/breeds.dart';
 import 'package:flutter/material.dart' hide Image;
-import 'package:flutter/material.dart' as material show Image;
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 class BreedsView extends StatelessWidget {
@@ -86,12 +83,8 @@ class _BreedsContentState extends State<BreedsContent> {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.select((BreedsBloc bloc) => bloc.state);
-    final breeds = state.breeds;
-    final status = state.status;
-
     // return Text('Some');
-    return BlocListener<BreedsBloc, BreedsState>(
+    return BlocConsumer<BreedsBloc, BreedsState>(
       listener: (context, state) {
         _scrollController.animateTo(
           0,
@@ -99,104 +92,36 @@ class _BreedsContentState extends State<BreedsContent> {
           curve: Curves.easeInOut,
         );
       },
-      child: InfiniteList(
-        scrollController: _scrollController,
-        itemCount: breeds.length + 1,
-        hasError: status == BreedsStatus.error,
-        hasReachedMax: state.fetchStatus == BreedsFetchStatus.endOfFeed,
-        onFetchData: () =>
-            context.read<BreedsBloc>().add(const BreedsFetchRequested()),
-        itemBuilder: (context, index) {
-          final breed = breeds.elementAtOrNull(index);
-          if (breed == null) {
-            if (state.fetchStatus == BreedsFetchStatus.endOfFeed) {
-              return const SizedBox.shrink();
+      listenWhen: (previous, current) =>
+          previous.fetchStatus != current.fetchStatus,
+      builder: (BuildContext context, BreedsState state) {
+        final breeds = state.breeds;
+        final status = state.status;
+
+        return InfiniteList(
+          scrollController: _scrollController,
+          itemCount: breeds.length + 1,
+          hasError: status == BreedsStatus.error,
+          hasReachedMax: state.fetchStatus == BreedsFetchStatus.endOfFeed,
+          onFetchData: () =>
+              context.read<BreedsBloc>().add(const BreedsFetchRequested()),
+          itemBuilder: (context, index) {
+            final breed = breeds.elementAtOrNull(index);
+            if (breed == null) {
+              if (state.fetchStatus == BreedsFetchStatus.endOfFeed) {
+                return const SizedBox.shrink();
+              }
+              return const Center(
+                child: SizedBox.square(
+                  dimension: 50,
+                  child: CircularProgressIndicator(),
+                ),
+              );
             }
-            return const Center(
-              child: SizedBox.square(
-                dimension: 50,
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-          return BreedTile(breed: breed);
-        },
-      ),
-    );
-  }
-}
-
-class BreedTile extends StatelessWidget {
-  const BreedTile({
-    required this.breed,
-    super.key,
-  });
-
-  final Breed breed;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: AppSpacing.lg),
-      child: GestureDetector(
-        onTap: () => context.go(
-          '/breeds/${breed.id}',
-          extra: BreedData(breed: breed),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          // width: double.infinity,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    breed.name,
-                    style: textTheme.titleLarge,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.menu),
-                    onPressed: () => context.go(
-                      '/breeds/${breed.id}',
-                      extra: BreedData(breed: breed),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-              AspectRatio(
-                aspectRatio: 1,
-                // SizedBox(
-                // dimension: MediaQuery.of(context).size.width,
-                child: BreedImage(image: breed.image),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    breed.origin,
-                    style: textTheme.bodyLarge,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        '${breed.intelligence}',
-                        style: textTheme.bodyLarge,
-                      ),
-                      const Icon(Icons.star),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+            return BreedTile(breed: breed);
+          },
+        );
+      },
     );
   }
 }

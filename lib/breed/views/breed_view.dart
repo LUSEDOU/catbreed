@@ -26,7 +26,7 @@ class BreedView extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        Logger('BreedPage').info('state: ${state.status}');
+        Logger('BreedPage').info('state: ${state.breed}');
         if (state.status == BreedStatus.unknown) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
@@ -80,121 +80,20 @@ class BreedContent extends StatelessWidget {
             const SizedBox(height: AppSpacing.xxlg),
             Expanded(
               child: SingleChildScrollView(
-                child: Builder(
-                  builder: (context) {
-                    final json = breed.toJson();
-
-                    final infoKeys = json.keys.where(
-                      (key) {
-                        final value = json[key];
-                        if (value == null) {
-                          return false;
-                        }
-
-                        if (key.contains('url')) {
-                          return false;
-                        }
-
-                        if (value is int ||
-                            (value is String && value.isNotEmpty) ||
-                            value is double ||
-                            value is bool) {
-                          return true;
-                        }
-
-                        return false;
-                      },
-                    ).toList();
-
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: infoKeys
-                          .map(
-                            (key) => InfoTile(
-                              title: key,
-                              value: json[key].toString(),
-                            ),
-                          )
-                          .toList(),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: breed.info.map((info) {
+                    return InfoTile(
+                      title: info.title,
+                      value: info.value,
                     );
-                  },
+                  }).toList(),
                 ),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class InfoTile extends StatelessWidget {
-  const InfoTile({
-    required this.title,
-    required this.value,
-    super.key,
-  });
-
-  final String title;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.md),
-      width: double.infinity,
-      padding: const EdgeInsets.only(right: AppSpacing.md),
-      decoration: ShapeDecoration(
-        color: theme.colorScheme.surface,
-        shape: StadiumBorder(
-          side: BorderSide(
-            color: theme.colorScheme.primary,
-            width: AppSpacing.xs,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            // width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-              vertical: AppSpacing.xs,
-            ),
-            decoration: ShapeDecoration(
-              color: theme.colorScheme.primary,
-              shape: StadiumBorder(
-                side: BorderSide(
-                  color: theme.colorScheme.primary,
-                  width: AppSpacing.xs,
-                ),
-              ),
-            ),
-            child: Text(
-              title,
-              style: textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onPrimary,
-              ),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Text(
-                value,
-                style: textTheme.titleSmall,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.end,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
