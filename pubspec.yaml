@@ -47,6 +47,7 @@ flutter:
 assets:
   - assets/icon_s.png
   - assets/icon.png
+  - assets/catbreeds.png
 
 flutter_native_splash:
   # This package generates native code to customize Flutter's default white native splash screen
@@ -65,14 +66,14 @@ flutter_native_splash:
   # splash screen to a png image.  This is useful for gradients. The image will be stretch to the
   # size of the app. Only one parameter can be used, color and background_image cannot both be set.
   color: "#FFFFFF"
-  # background_image: "assets/icon_s.png"
+  background_image: "assets/catbreeds.png"
 
   # Optional parameters are listed below.  To enable a parameter, uncomment the line by removing
   # the leading # character.
 
   # The image parameter allows you to specify an image used in the splash screen.  It must be a
   # png file and should be sized for 4x pixel density.
-  image: assets/icon_s.png
+  image: assets/catbreeds.png
 
   # The branding property allows you to specify an image used as branding in the splash screen.
   # It must be a png file. It is supported for Android, iOS and the Web.  For Android 12,
