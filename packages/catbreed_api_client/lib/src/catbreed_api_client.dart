@@ -41,6 +41,8 @@ class CatbreedApiClient {
       final breeds =
           (jsonDecode(data) as List<dynamic>).cast<Map<String, dynamic>>();
 
+      await Future.wait(breeds.map(_getImages));
+
       return breeds.map(Breed.fromJson).toList();
     } on DioException catch (error) {
       throw ApiClientException(
@@ -75,21 +77,7 @@ class CatbreedApiClient {
       final breeds =
           (jsonDecode(data) as List<dynamic>).cast<Map<String, dynamic>>();
 
-      for (final breed in breeds) {
-        if (breed['image'] == null) {
-          final id = breed['reference_image_id'] as String?;
-          if (id == null) continue;
-
-          final iresponse = await _dio.get<String>('images/$id');
-
-          final idata = iresponse.data;
-          if (idata == null) throw const ApiClientException('Response is null');
-
-          final image = jsonDecode(idata) as Map<String, dynamic>;
-
-          breed['image'] = image;
-        }
-      }
+      await Future.wait(breeds.map(_getImages));
 
       return breeds.map(Breed.fromJson).toList();
     } on DioException catch (error) {
@@ -98,6 +86,22 @@ class CatbreedApiClient {
       );
     } on FormatException catch (error) {
       throw ApiDecodeFailure(error);
+    }
+  }
+
+  Future<void> _getImages(Map<String, dynamic> json) async {
+    if (json['image'] == null) {
+      final id = json['reference_image_id'] as String?;
+      if (id == null) return;
+
+      final iresponse = await _dio.get<String>('images/$id');
+
+      final idata = iresponse.data;
+      if (idata == null) throw const ApiClientException('Response is null');
+
+      final image = jsonDecode(idata) as Map<String, dynamic>;
+
+      json['image'] = image;
     }
   }
 
