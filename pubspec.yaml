@@ -42,10 +42,3 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
-
-flutter_launcher_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "assets/icon_s.png"
-  remove_alpha_ios: true
-  min_sdk_android: 21 # android min sdk min:16, default 21
