@@ -14,7 +14,7 @@ class BreedsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Breeds'),
+        title: const Text('CatBreeds'),
       ),
       body: _Body(query: query),
     );

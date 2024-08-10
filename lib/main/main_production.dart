@@ -7,9 +7,10 @@ void main() {
   bootstrap(
     () async {
       final apiClient = CatbreedApiClient(
-        apiKey: '',
-        baseUrl: '',
+        apiKey: const String.fromEnvironment('APIKEY'),
+        baseUrl: 'https://api.thecatapi.com/v1/',
       );
+      // final apiClient = MockApiClient();
 
       final repository = CatbreedRepository(client: apiClient);
       //
